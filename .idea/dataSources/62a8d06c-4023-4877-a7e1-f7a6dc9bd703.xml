@@ -499,7 +499,7 @@
     </routine>
     <schema id="191" parent="1" name="main">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2025-04-19.20:24:15</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-04-19.20:59:49</LastIntrospectionLocalTimestamp>
     </schema>
     <argument id="192" parent="16">
       <ArgumentDirection>R</ArgumentDirection>
@@ -1590,26 +1590,403 @@
     <argument id="554" parent="190">
       <Position>1</Position>
     </argument>
-    <table id="555" parent="191" name="sqlite_master">
+    <table id="555" parent="191" name="article"/>
+    <table id="556" parent="191" name="article_disease_link"/>
+    <table id="557" parent="191" name="biochemistry"/>
+    <table id="558" parent="191" name="cells_phenotypes"/>
+    <table id="559" parent="191" name="cytokines"/>
+    <table id="560" parent="191" name="disease"/>
+    <table id="561" parent="191" name="patient_condition"/>
+    <table id="562" parent="191" name="sqlite_master">
       <System>1</System>
     </table>
-    <column id="556" parent="555" name="type">
+    <column id="563" parent="555" name="id">
+      <NotNull>1</NotNull>
       <Position>1</Position>
-      <StoredType>TEXT|0s</StoredType>
+      <StoredType>INTEGER|0s</StoredType>
     </column>
-    <column id="557" parent="555" name="name">
+    <column id="564" parent="555" name="pubmed_id">
       <Position>2</Position>
-      <StoredType>TEXT|0s</StoredType>
+      <StoredType>VARCHAR|0s</StoredType>
     </column>
-    <column id="558" parent="555" name="tbl_name">
+    <column id="565" parent="555" name="title">
       <Position>3</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>
-    <column id="559" parent="555" name="rootpage">
+    <column id="566" parent="555" name="abstract">
+      <Position>4</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="567" parent="555" name="year">
+      <Position>5</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="568" parent="555" name="doi">
+      <Position>6</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="569" parent="555" name="journal">
+      <Position>7</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="570" parent="555" name="authors">
+      <Position>8</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="571" parent="555" name="mesh_terms">
+      <Position>9</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <index id="572" parent="555" name="sqlite_autoindex_article_1">
+      <ColNames>pubmed_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <index id="573" parent="555" name="sqlite_autoindex_article_2">
+      <ColNames>doi</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="574" parent="555">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="575" parent="555">
+      <ColNames>pubmed_id</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_article_1</UnderlyingIndexName>
+    </key>
+    <key id="576" parent="555">
+      <ColNames>doi</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_article_2</UnderlyingIndexName>
+    </key>
+    <column id="577" parent="556" name="article_id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="578" parent="556" name="disease_id">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <foreign-key id="579" parent="556">
+      <ColNames>article_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>article</RefTableName>
+    </foreign-key>
+    <foreign-key id="580" parent="556">
+      <ColNames>disease_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>disease</RefTableName>
+    </foreign-key>
+    <index id="581" parent="556" name="sqlite_autoindex_article_disease_link_1">
+      <ColNames>article_id
+disease_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="582" parent="556">
+      <ColNames>article_id
+disease_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_article_disease_link_1</UnderlyingIndexName>
+    </key>
+    <column id="583" parent="557" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="584" parent="557" name="CRP">
+      <Position>2</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="585" parent="557" name="article_id">
+      <Position>3</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="586" parent="557" name="disease_id">
+      <Position>4</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="587" parent="557" name="cytokines_id">
+      <Position>5</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="588" parent="557" name="cells_phenotypes_id">
+      <Position>6</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <foreign-key id="589" parent="557">
+      <ColNames>article_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>article</RefTableName>
+    </foreign-key>
+    <foreign-key id="590" parent="557">
+      <ColNames>disease_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>disease</RefTableName>
+    </foreign-key>
+    <foreign-key id="591" parent="557">
+      <ColNames>cytokines_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>cytokines</RefTableName>
+    </foreign-key>
+    <foreign-key id="592" parent="557">
+      <ColNames>cells_phenotypes_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>cells_phenotypes</RefTableName>
+    </foreign-key>
+    <key id="593" parent="557">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="594" parent="558" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="595" parent="558" name="CD3CD4">
+      <Position>2</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="596" parent="558" name="CD3CD8">
+      <Position>3</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="597" parent="558" name="article_id">
+      <Position>4</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="598" parent="558" name="disease_id">
+      <Position>5</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="599" parent="558" name="cytokines_id">
+      <Position>6</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="600" parent="558" name="biochemistry_id">
+      <Position>7</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <foreign-key id="601" parent="558">
+      <ColNames>article_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>article</RefTableName>
+    </foreign-key>
+    <foreign-key id="602" parent="558">
+      <ColNames>disease_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>disease</RefTableName>
+    </foreign-key>
+    <foreign-key id="603" parent="558">
+      <ColNames>cytokines_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>cytokines</RefTableName>
+    </foreign-key>
+    <foreign-key id="604" parent="558">
+      <ColNames>biochemistry_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>biochemistry</RefTableName>
+    </foreign-key>
+    <key id="605" parent="558">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="606" parent="559" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="607" parent="559" name="IL1">
+      <Position>2</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="608" parent="559" name="IL6">
+      <Position>3</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="609" parent="559" name="IL8">
+      <Position>4</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="610" parent="559" name="IL9">
+      <Position>5</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="611" parent="559" name="IL12">
+      <Position>6</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="612" parent="559" name="IL15">
+      <Position>7</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="613" parent="559" name="IL17">
+      <Position>8</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="614" parent="559" name="IL18">
+      <Position>9</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="615" parent="559" name="TNF_alpha">
+      <Position>10</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="616" parent="559" name="TNF_beta">
+      <Position>11</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="617" parent="559" name="INF_gamma">
+      <Position>12</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <column id="618" parent="559" name="article_id">
+      <Position>13</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="619" parent="559" name="disease_id">
+      <Position>14</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="620" parent="559" name="cells_phenotypes_id">
+      <Position>15</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="621" parent="559" name="biochemistry_id">
+      <Position>16</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <foreign-key id="622" parent="559">
+      <ColNames>article_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>article</RefTableName>
+    </foreign-key>
+    <foreign-key id="623" parent="559">
+      <ColNames>disease_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>disease</RefTableName>
+    </foreign-key>
+    <foreign-key id="624" parent="559">
+      <ColNames>cells_phenotypes_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>cells_phenotypes</RefTableName>
+    </foreign-key>
+    <foreign-key id="625" parent="559">
+      <ColNames>biochemistry_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>biochemistry</RefTableName>
+    </foreign-key>
+    <key id="626" parent="559">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="627" parent="560" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="628" parent="560" name="name">
+      <Position>2</Position>
+      <StoredType>VARCHAR|0s</StoredType>
+    </column>
+    <index id="629" parent="560" name="sqlite_autoindex_disease_1">
+      <ColNames>name</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="630" parent="560">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="631" parent="560">
+      <ColNames>name</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_disease_1</UnderlyingIndexName>
+    </key>
+    <column id="632" parent="561" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="633" parent="561" name="BDI">
+      <Position>2</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="634" parent="561" name="HAM_D">
+      <Position>3</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="635" parent="561" name="MADRS">
+      <Position>4</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="636" parent="561" name="article_id">
+      <Position>5</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="637" parent="561" name="disease_id">
+      <Position>6</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="638" parent="561" name="cytokines_id">
+      <Position>7</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="639" parent="561" name="cells_phenotypes_id">
+      <Position>8</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <column id="640" parent="561" name="biochemistry_id">
+      <Position>9</Position>
+      <StoredType>INTEGER|0s</StoredType>
+    </column>
+    <foreign-key id="641" parent="561">
+      <ColNames>article_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>article</RefTableName>
+    </foreign-key>
+    <foreign-key id="642" parent="561">
+      <ColNames>disease_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>disease</RefTableName>
+    </foreign-key>
+    <foreign-key id="643" parent="561">
+      <ColNames>cytokines_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>cytokines</RefTableName>
+    </foreign-key>
+    <foreign-key id="644" parent="561">
+      <ColNames>cells_phenotypes_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>cells_phenotypes</RefTableName>
+    </foreign-key>
+    <foreign-key id="645" parent="561">
+      <ColNames>biochemistry_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>biochemistry</RefTableName>
+    </foreign-key>
+    <key id="646" parent="561">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="647" parent="562" name="type">
+      <Position>1</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="648" parent="562" name="name">
+      <Position>2</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="649" parent="562" name="tbl_name">
+      <Position>3</Position>
+      <StoredType>TEXT|0s</StoredType>
+    </column>
+    <column id="650" parent="562" name="rootpage">
       <Position>4</Position>
       <StoredType>INT|0s</StoredType>
     </column>
-    <column id="560" parent="555" name="sql">
+    <column id="651" parent="562" name="sql">
       <Position>5</Position>
       <StoredType>TEXT|0s</StoredType>
     </column>

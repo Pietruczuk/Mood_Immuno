@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.database.models import Base, Immuno
+from src.database.models import Base
 
 # ---- Funkcja tworząca połączenie z bazą ------------------------------------------------------------------------------
 def init_db(db_path='c:/Users/amund/Desktop/github/Mood_Immuno/data/pubmed.db'):
