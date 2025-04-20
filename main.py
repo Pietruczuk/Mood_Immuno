@@ -6,32 +6,32 @@ from src.pubmed.fetch_pubmed import fetch_pubmed_ids, fetch_details
 import os
 import traceback
 
-# --- Konfiguracja zapytania ---
+# --- Query configuration ---------------------------------------------------------------------------------------------/
 TERM = "depressive disorder"
 QUERY = f'"{TERM}"[MeSH Terms] AND "humans"[MeSH Terms] AND ("2014"[dp] : "2024"[dp])'
 MAX_RESULTS = 7
 
-# --- Połączenie z bazą ---
+# --- Connection to the database --------------------------------------------------------------------------------------/
 db_path = os.path.abspath("data/pubmed.db")
 session = init_db(f"sqlite:///{db_path}")
-print(f"🗃 Połączono z bazą danych: {db_path}")
+print(f"🗃 Connected to database: {db_path}")
 
-# --- Upewnij się, że choroba jest w bazie ---
+# --- Ensuring that the disease is in the database --------------------------------------------------------------------/
 disease = session.query(Disease).filter_by(name=TERM).first()
 if not disease:
     disease = Disease(name=TERM)
     session.add(disease)
     session.commit()
-    print(f"✅ Dodano nową chorobę: {TERM}")
+    print(f"✅ A new disease has been added: {TERM}")
 
-# --- Pobieranie ID ---
+# --- Download ID -----------------------------------------------------------------------------------------------------/
 ids = fetch_pubmed_ids(QUERY, max_results=MAX_RESULTS)
-print(f"🔍 Pobrano {len(ids)} PubMed ID")
+print(f"🔍 Downloaded {len(ids)} PubMed ID")
 
-# --- Przetwarzanie artykułów ---
+# --- Processing of articles ------------------------------------------------------------------------------------------/
 for pubmed_id in ids:
     if session.query(Article).filter_by(pubmed_id=pubmed_id).first():
-        print(f"⚠ Artykuł {pubmed_id} już istnieje — pominięto.")
+        print(f"⚠ Article {pubmed_id} already exists — omitted.")
         continue
 
     try:
@@ -51,11 +51,11 @@ for pubmed_id in ids:
         article.diseases.append(disease)
         session.add(article)
         session.commit()
-        print(f"✅ Dodano artykuł: {pubmed_id}")
+        print(f"✅ Article added: {pubmed_id}")
 
     except Exception as e:
         session.rollback()
-        print(f"❌ Błąd przy dodawaniu artykułu {pubmed_id}:")
+        print(f"❌ Error adding article {pubmed_id}:")
         traceback.print_exc()
 
-print("🎉 Gotowe!")
+print("🎉 Done!")

@@ -1,13 +1,13 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, Table, ForeignKey, Float, Date     # Import podstawowych komponentów SQLAlchemy
+from sqlalchemy import create_engine, Column, Integer, String, Text, Table, ForeignKey, Float, Date     # Importing basic SQLAlchemy components
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 
 
-# ---- Tworzenie klasy Base, która jest wymagana przez SQLAlchemy do śledzenia wszystkich definicji tabel -------------/
+# ---- Creating the Base class, which is required by SQLAlchemy to track all table definitions ------------------------/
 Base = declarative_base()
 
 
-# ---- Tabela relacyjna wiele-do-wielu między artykułami a chorobami --------------------------------------------------/
+# ---- Many-to-many relational table between articles and diseases ----------------------------------------------------/
 article_disease_link = Table(
     'article_disease_link', Base.metadata,
     Column('article_id', Integer, ForeignKey('article.id'), primary_key=True),
@@ -15,21 +15,21 @@ article_disease_link = Table(
 )
 
 
-# ---- Klasa reprezentująca tabelę 'article' w bazie danych -----------------------------------------------------------/
+# ---- Class representing the 'article' table in the database ---------------------------------------------------------/
 class Article(Base):
     __tablename__ = 'article'
 
-    id = Column(Integer, primary_key=True)     # Unikalny identyfikator w tabeli (INTEGER PRIMARY KEY)
-    pubmed_id = Column(String, unique=True)    # PubMed ID artykułu – unikalny dla każdego wpisu w Pubmed
-    title = Column(Text)                       # Dane bibliograficzne: tytuł, streszczenie, czasopismo, rok publikacji
+    id = Column(Integer, primary_key=True)     # Unique identifier in the table (INTEGER PRIMARY KEY)
+    pubmed_id = Column(String, unique=True)    # PubMed ID of the article – unique for each entry in PubMed
+    title = Column(Text)                       # Bibliographic data: title, abstract, journal, year of publication
     abstract = Column(Text)
     year = Column(Integer)
     doi = Column(String, unique=True)
     journal = Column(String)
-    authors = Column(Text)                     # Lista autorów jako tekst
-    mesh_terms = Column(Text)                  # Lista MeSH terms jako tekst
+    authors = Column(Text)                     # List of authors as text
+    mesh_terms = Column(Text)                  # List of MeSH terms as text
 
-    # Relacja wiele-do-wielu z 'disease', użycie tabeli pośredniczącej, synchronizacja
+    # Many-to-many relationship with 'disease', use of an intermediate table, synchronization
     diseases = relationship("Disease", secondary=article_disease_link, back_populates="articles")
     cytokines_entries = relationship("Cytokines", back_populates="article")
     cells_phenotypes_entries = relationship("CellsPhenotypes", back_populates="article")
@@ -37,24 +37,24 @@ class Article(Base):
     patient_condition_entries = relationship("PatientCondition", back_populates="article")
 
 
-# ---- Klasa reprezentująca tabelę 'disease' w bazie danych -----------------------------------------------------------/
+# ---- Class representing the 'disease' table in the database ---------------------------------------------------------/
 class Disease(Base):
     __tablename__ = 'disease'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
 
-    # Relacja wiele-do-wielu z Article przez tabelę pośrednią
+    # Many-to-many relationship with Article via an intermediate table
     articles = relationship("Article", secondary=article_disease_link, back_populates="diseases")
 
-    # Relacje z innymi tabelami
+    # Relationships with other tables
     cells_phenotypes_entries = relationship("CellsPhenotypes", back_populates="disease")
     biochemistry_entries = relationship("Biochemistry", back_populates="disease")
     cytokines_entries = relationship("Cytokines", back_populates="disease")
     patient_condition_entries = relationship("PatientCondition", back_populates="disease")
 
 
-# ---- Klasa reprezentująca tabelę 'cytokines' w bazie danych ---------------------------------------------------------/
+# ---- Class representing the 'cytokines' table in the database -------------------------------------------------------/
 class Cytokines(Base):
     __tablename__ = 'cytokines'
 
@@ -72,26 +72,26 @@ class Cytokines(Base):
     TNF_beta = Column(String)
     INF_gamma = Column(String)
 
-    # Powiązania z article
+    # Links to article
     article_id = Column(Integer, ForeignKey('article.id'))
     article = relationship("Article", back_populates="cytokines_entries")
 
-    # Powiązania z disease
+    # Links to disease
     disease_id = Column(Integer, ForeignKey('disease.id'))
     disease = relationship("Disease", back_populates="cytokines_entries")
 
-    # Powiązania z cells_phenotypes
+    # Links to cells_phenotypes
     cells_phenotypes_id = Column(Integer, ForeignKey('cells_phenotypes.id'))
     cells_phenotypes = relationship("CellsPhenotypes", back_populates="cytokines_entries")
 
-    # Powiązania z biochemistry
+    # Links to biochemistry
     biochemistry_id = Column(Integer, ForeignKey('biochemistry.id'))
     biochemistry = relationship("Biochemistry", back_populates="cytokines_entries")
 
     patient_condition_entries = relationship("PatientCondition", back_populates="cytokines")
 
 
-# ---- Klasa reprezentująca tabelę 'cells_phenotypes' w bazie danych --------------------------------------------------/
+# ---- Class representing the 'cells_phenotypes' table in the database ------------------------------------------------/
 class CellsPhenotypes(Base):
     __tablename__ = 'cells_phenotypes'
 
@@ -100,26 +100,26 @@ class CellsPhenotypes(Base):
     CD3CD4 = Column(String)
     CD3CD8 = Column(String)
 
-    # Powiązania z tabelą article
+    # Links to article
     article_id = Column(Integer, ForeignKey('article.id'))
     article = relationship("Article", back_populates="cells_phenotypes_entries")
 
-    # Powiązania z tabelą disease
+    # Links to disease
     disease_id = Column(Integer, ForeignKey('disease.id'))
     disease = relationship("Disease", back_populates="cells_phenotypes_entries")
 
-    # Powiązania z tabelą cytokines
+    # Links to cytokines
     cytokines_id = Column(Integer, ForeignKey('cytokines.id'))
     cytokines = relationship("Cytokines", back_populates="cells_phenotypes_entries")
 
-    # Powiązania z tabelą biochemistry
+    # Links to biochemistry
     biochemistry_id = Column(Integer, ForeignKey('biochemistry.id'))
     biochemistry = relationship("Biochemistry", back_populates="cells_phenotypes_entries")
 
     patient_condition_entries = relationship("PatientCondition", back_populates="cells_phenotypes")
 
 
-# ---- Klasa reprezentująca tabelę 'biochemistry' w bazie danych --------------------------------------------------/
+# ---- Class representing the 'biochemistry' table in the database ----------------------------------------------------/
 class Biochemistry(Base):
     __tablename__ = 'biochemistry'
 
@@ -127,19 +127,19 @@ class Biochemistry(Base):
 
     CRP = Column(String)
 
-    # Powiązania z article
+    # Links to article
     article_id = Column(Integer, ForeignKey('article.id'))
     article = relationship("Article", back_populates="biochemistry_entries")
 
-    # Powiązania z disease
+    # Links to disease
     disease_id = Column(Integer, ForeignKey('disease.id'))
     disease = relationship("Disease", back_populates="biochemistry_entries")
 
-    # Powiązania z cytokines
+    # Links to cytokines
     cytokines_id = Column(Integer, ForeignKey('cytokines.id'))
     cytokines = relationship("Cytokines", back_populates="biochemistry_entries")
 
-    # Powiązania z cells_phenotypes
+    # Links to cells_phenotypes
     cells_phenotypes_id = Column(Integer, ForeignKey('cells_phenotypes.id'))
     cells_phenotypes = relationship("CellsPhenotypes", back_populates="biochemistry_entries")
 
@@ -147,7 +147,7 @@ class Biochemistry(Base):
 
 
 
-# ---- Klasa reprezentująca tabelę 'patient_condition' w bazie danych -------------------------------------------------/
+# ---- Class representing the 'patient_condition' table in the database -----------------------------------------------/
 class PatientCondition(Base):
     __tablename__ = 'patient_condition'
 
@@ -157,7 +157,7 @@ class PatientCondition(Base):
     HAM_D = Column(Integer)    # Hamilton Depression Rating Scale
     MADRS = Column(Integer)    # Montgomery–Åsberg Depression Rating Scale
 
-    # Relacje z pozostałymi tabelami:
+    # Relationships with other tables
     article_id = Column(Integer, ForeignKey('article.id'))
     article = relationship("Article", back_populates="patient_condition_entries")
 

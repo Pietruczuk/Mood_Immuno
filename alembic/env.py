@@ -1,14 +1,12 @@
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
 from alembic import context
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.database.models import Base  # <- ścieżka do Twojego Base z modelami
+from src.database.models import Base  # <- path to Base with models
 target_metadata = Base.metadata
 
 # this is the Alembic Config object, which provides
